@@ -7,7 +7,7 @@ The management of TAs and graders contributing to courses offered by ECE is a ca
 <p>The department prepares an initial allocation considering that (1) the same TA should be hired whenever possible for classes with multiple tutorial or lab sessions, (2) each TA may have an appointment of at least 45 hours (for each course) and at most 180 hours (in total), and (3) if graduate TAs are available for a course then they should be hired instead of undergraduate students. Instructors may modify this initial allocation by changing TA and grader hours if the total budget of the course is not exceeded. </p><br>
 <p>The department approves the final TA and grader allocations for each course and sends the job offers to the TAs and graders who can accept or reject it. In order to handle unforeseen events and changes, multiple job offers can be sent to TAs and graders by the department. At the end of the course, the instructor writes a short evaluation on each TA and grader of the course. </p><br>
 
-<h1>Work Plan and Progres</h1>
+<h1>Work Plan and Progress</h1>
 <p dir="ltr">Meeting 1: Sunday 2/5/17, 3:00 PM - 5:30 PM, Trottier Building (2.5h)</p>
 <br>
 <p dir="ltr">Attendance:</p>
