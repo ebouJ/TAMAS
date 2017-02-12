@@ -1,0 +1,17 @@
+Work plan/progress:
+
+Meeting 1: Sunday 2/5/17, Trottier
+Collectively looked over project description
+Set up meeting times for future meetings
+
+Meeting 2: Monday 2/6/2017, 4-8:30 PM, McLennan Library
+Discussed design questions and general project specifications
+Requirements Document (**finish**)
+functional/nonfunctional requirements 
+actors and use cases
+Domain Model (**almost finished**)
+
+Meeting 3: Wednesday 2/8/2017, 5 PM-8:30PM, Trottier
+Complete domain model
+Complete statechart for class “job”
+Begin requirement-level sequence/activity diagrams

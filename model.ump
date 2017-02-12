@@ -1,0 +1,125 @@
+namespace ca.mcgill.ecse321.TAMAS.model;
+
+class Tamas
+{
+}
+
+class Person
+{
+  name;
+  username;
+  password;
+}
+
+class JobOffer
+{
+}
+
+class Evaluation
+{
+  0..* -- 1 Instructor;
+  1 -- 1 Job;
+}
+
+class LabSession
+{
+Weekday{ Monday{} Tuesday{} Wednesday{} Thursday{} Friday{}}
+  Time startTime;
+  Time endTime;
+  int sectionNumber;
+  String location;
+}
+
+class Student
+{
+  String studentId;
+  isA Person;
+  1 -- 0..3 Job;
+}
+
+class Course
+{
+  String courseCode;
+  int courseCredit;
+   1 <@>- 0..* TutorialSession specificTutorial;
+   1 <@>- 0..* LabSession specificLab;
+}
+
+class TaJob
+{
+  isA Job;
+}
+
+class Instructor
+{
+  * -- * Course courseTaught;
+  isA Person;
+}
+
+class TutorialSession
+{
+Weekday{ Monday{} Tuesday{} Wednesday{} Thursday{} Friday{}}
+  Time startTime;
+  Time endTime;
+  int sectionNumber;
+  String location;
+}
+
+class GraderJob
+{
+  isA Job;
+}
+
+class EceAdmin
+{
+  1 -- * Course courseList;
+  isA Person;
+}
+
+class GradStudent
+{
+  isA Student;
+}
+
+class UndergradStudent
+{
+  isA Student;
+}
+
+class Job
+{
+  int numberOfHours;
+  int salary;
+  1 -- * JobOffer;
+  * -- 1 Course course;
+}
+
+class JobPosting
+{
+  description;
+deadline;
+0..* -- 1 Instructor postingInstructor;
+  1..* -- 1..* Job postedJob;
+  autounique jobPostingId;
+}
+
+class JobAssignment
+{
+const int MIN_HOURS = 45;
+const int MAX_HOURS = 180;
+0..* -- 1 Student selectedStudent;
+1 -- 1 Job allocatedJob;
+}
+
+class JobApplication
+{
+String experience;
+preference{ ta{} grader{} both{} }
+0..* -- 1 Student applicant;
+0..* -- 1 JobPosting appliedJob;
+}
+
+class Allocation{
+1 -- 1 Student;
+1 -- 1 Job;
+}
