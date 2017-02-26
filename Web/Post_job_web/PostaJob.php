@@ -16,7 +16,7 @@
 	<p> Course:</p>
     <!– course name here will be dynamically generated in later release ->
 	<select name="course">
-        <option value="ECSE222">ECSE 322</option>
+        <option value="ECSE222">ECSE 222</option>
         <option value="ECSE223">ECSE 223</option>
         <option value="ECSE321">ECSE 321</option>
     </select>
@@ -172,7 +172,7 @@
         <option value="1800">18:00</option>
     </select>
        <select name="startTime[]">
-        <option value="800">7:00</option>
+        <option value="800">8:00</option>
         <option value="900">9:00</option>
         <option value="1000">10:00</option>
         <option value="1100">11:00</option>
