@@ -1,7 +1,7 @@
 namespace ca.mcgill.ecse321.TAMAS.model;
 
-class Tamas
-{
+class Tamas {
+
 }
 
 class Person
@@ -11,9 +11,6 @@ class Person
   password;
 }
 
-class JobOffer
-{
-}
 
 class Evaluation
 {
@@ -21,33 +18,28 @@ class Evaluation
   1 -- 1 Job;
 }
 
-class LabSession
-{
-Weekday{ Monday{} Tuesday{} Wednesday{} Thursday{} Friday{}}
+class Session {
+  Weekday { Monday{} Tuesday{} Wednesday{} Thursday{} Friday{} }
   Time startTime;
   Time endTime;
   int sectionNumber;
   String location;
+  boolean isLabSession; // else TutorialSession
 }
 
 class Student
 {
   String studentId;
   isA Person;
-  1 -- 0..3 Job;
+  boolean isGrad;
+  1 jobCandidate -- 0..3 Job offeredJob;
 }
 
 class Course
 {
   String courseCode;
   int courseCredit;
-   1 <@>- 0..* TutorialSession specificTutorial;
-   1 <@>- 0..* LabSession specificLab;
-}
-
-class TaJob
-{
-  isA Job;
+   1 <@>- 0..* Session specificSession;
 }
 
 class Instructor
@@ -56,70 +48,31 @@ class Instructor
   isA Person;
 }
 
-class TutorialSession
-{
-Weekday{ Monday{} Tuesday{} Wednesday{} Thursday{} Friday{}}
-  Time startTime;
-  Time endTime;
-  int sectionNumber;
-  String location;
-}
-
-class GraderJob
-{
-  isA Job;
-}
-
 class EceAdmin
 {
   1 -- * Course courseList;
   isA Person;
 }
 
-class GradStudent
-{
-  isA Student;
-}
-
-class UndergradStudent
-{
-  isA Student;
-}
-
 class Job
 {
+  const int MIN_HOURS = 45;
+  const int MAX_HOURS = 180;
   int numberOfHours;
   int salary;
-  1 -- * JobOffer;
+  boolean isTaJob; // else GraderJob
+  boolean isAssignedToStudent;
+  boolean isAllocatedToStudent; // When finalized
+  description;
+  deadline;
+  autounique jobId;
+  JobState { IsPosted{} AppliedTo{} AssignedStudentTo{} AssignmentFinalized{} }
   * -- 1 Course course;
 }
 
-class JobPosting
-{
-  description;
-deadline;
-0..* -- 1 Instructor postingInstructor;
-  1..* -- 1..* Job postedJob;
-  autounique jobPostingId;
-}
-
-class JobAssignment
-{
-const int MIN_HOURS = 45;
-const int MAX_HOURS = 180;
-0..* -- 1 Student selectedStudent;
-1 -- 1 Job allocatedJob;
-}
-
-class JobApplication
-{
-String experience;
-preference{ ta{} grader{} both{} }
-0..* -- 1 Student applicant;
-0..* -- 1 JobPosting appliedJob;
-}
-
-class Allocation{
-1 -- 1 Student;
-1 -- 1 Job;
+class JobApplication {
+  String experience;
+  preference { ta{} grader{} both{} }
+  0..3 -- 1 Student applicant;
+  0..* -- 1 Job appliedJob;
 }
