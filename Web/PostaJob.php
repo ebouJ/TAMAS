@@ -21,7 +21,13 @@
         <option value="ECSE321">ECSE 321</option>
     </select>
 	</div>
-	<hr><br>	
+	<hr><br>
+    <div id="hourForm">
+	<p> Job Type</p>
+    <select name="job_type"><option value="Marker">Marker</option>
+    <option value="Grader">Grader</option></select>
+        <hr><br>
+</div>
 <div id="hourForm">
 	<p> Hours: </p>
 	<input type="text" name="hour">

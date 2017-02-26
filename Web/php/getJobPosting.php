@@ -25,6 +25,8 @@ function getJobPostingByID($post_id){
     $result->data_seek($j);
     echo 'COURSE: ' . $result->fetch_assoc()['COURSE'] . '<br>';
     $result->data_seek($j);
+    echo 'Type_of_Job: ' . $result->fetch_assoc()['JOB_TYPE'] . '<br>';
+    $result->data_seek($j);
     echo 'HOUR: ' . $result->fetch_assoc()['HOUR'] . '<br>';
     $result->data_seek($j);
     echo 'DESCRIPTION: ' . $result->fetch_assoc()['DESCRIPTION'] . '<br>';
@@ -58,6 +60,8 @@ function getJobPostingByInstructorName($instructor_name){
     $result->data_seek($j);
     echo 'COURSE: ' . $result->fetch_assoc()['COURSE'] . '<br>';
     $result->data_seek($j);
+    echo 'Type_of_Job: ' . $result->fetch_assoc()['JOB_TYPE'] . '<br>';
+    $result->data_seek($j);
     echo 'HOUR: ' . $result->fetch_assoc()['HOUR'] . '<br>';
     $result->data_seek($j);
     echo 'DESCRIPTION: ' . $result->fetch_assoc()['DESCRIPTION'] . '<br>';
@@ -90,6 +94,8 @@ function getJobPostingByCouseName($course_name){
     echo 'INSTRUCTOR_NAME: ' . $result->fetch_assoc()['INSTRUCTOR_NAME'] . '<br>';
     $result->data_seek($j);
     echo 'COURSE: ' . $result->fetch_assoc()['COURSE'] . '<br>';
+    $result->data_seek($j);
+    echo 'Type_of_Job: ' . $result->fetch_assoc()['JOB_TYPE'] . '<br>';
     $result->data_seek($j);
     echo 'HOUR: ' . $result->fetch_assoc()['HOUR'] . '<br>';
     $result->data_seek($j);

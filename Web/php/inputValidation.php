@@ -9,7 +9,7 @@ $LPL=new LocalPersistenceLayer();
 $daysofWeek="";
 $startTime="800 800 800 800 800";
 $endTime="800 800 800 800 800";
-
+$type="";
 // instructor name will be added dynamically in later release
 
 // course name here will be dynamically generated in later release
@@ -20,6 +20,7 @@ $instructor_name="Proferssor Paul Python";
 if(isset($_POST['course'])) $course=$_POST['course'];
 else $course=" ";
 
+if(isset($_POST['job_type'])) $type=$_POST['job_type'];
 // load the hour field
 if(isset($_POST['hour'])) $hour=$_POST['hour'];
 
@@ -48,7 +49,7 @@ if(isset($_POST['endTime'])){
 $endTime=$_POST['endTime'];
 
 }
-connect($instructor_name,$course,$hour,$description,$daysofWeek,$startTime,$endTime);
+connect($instructor_name,$course,$type,$hour,$description,$daysofWeek,$startTime,$endTime);
 
     
 

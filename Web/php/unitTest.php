@@ -11,13 +11,14 @@ $conn=new mysqli($hn,$un,$pw,$db);
 if ($conn->connect_error) mysql_fatal_error("Cannot connect");
 $instructor_name="Paul Python";
 $course="ECSE321";
+$type="Marker";
 $hour=14;
 $description="A fantastic course!";
 $day="Monday Tuesday Wednesday";
 $startTime="800 900 1000 1100 800";
 $endTime="900 1000 1000 1200 1300";
 
- $query = "INSERT INTO `JobPostData` (`INSTRUCTOR_NAME`, `COURSE`, `HOUR`, `DESCRIPTION`, `DAYS_OF_WEEK`, `MON_START_TIME`, `MON_END_TIME`, `TUE_START_TIME`, `TUE_END_TIME`, `WED_START_TIME`, `WED_END_TIME`, `THU_START_TIME`, `THU_END_TIME`, `FRI_START_TIME`, `FRI_END_TIME`) VALUES ('$instructor_name','$course','$hour','$description','$day','$startTime[0]','$endTime[0]','$startTime[1]','$endTime[1]','$startTime[2]','$endTime[2]','$startTime[3]','$endTime[3]','$startTime[4]','$endTime[4]');";
+ $query = "INSERT INTO `JobPostData` (`INSTRUCTOR_NAME`, `COURSE`,`JOB_TYPE`, `HOUR`, `DESCRIPTION`, `DAYS_OF_WEEK`, `MON_START_TIME`, `MON_END_TIME`, `TUE_START_TIME`, `TUE_END_TIME`, `WED_START_TIME`, `WED_END_TIME`, `THU_START_TIME`, `THU_END_TIME`, `FRI_START_TIME`, `FRI_END_TIME`) VALUES ('$instructor_name','$course','$type','$hour','$description','$day','$startTime[0]','$endTime[0]','$startTime[1]','$endTime[1]','$startTime[2]','$endTime[2]','$startTime[3]','$endTime[3]','$startTime[4]','$endTime[4]');";
 
 
 
