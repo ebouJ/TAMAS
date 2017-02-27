@@ -1,64 +1,100 @@
+package ca.mcgill.ecse321.TAMAS.view;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+
+import com.mysql.jdbc.StringUtils;
+
+import ca.mcgill.ecse321.TAMAS.persistence.JobApplicationPersistence;
+import ca.mcgill.ecse321.TAMAS.persistence.StudentRecordPersistence;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 
 public class JobApplicationPage extends JFrame {
+	//error message
+	private JLabel errorMessage;
+	
+	// error
+	private String error = null;
+	
+	// scrollpane for CV
+	private JTextArea cvText;
+	private JScrollPane cvScroll;
+	private JButton apply;
+		
+	// Label for CV
+	private JLabel cvLabel;
 
-	private JPanel contentPane;
-	private JTextField textField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JobApplicationPage frame = new JobApplicationPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public JobApplicationPage() {
+		initComponents();
+		refreshData();	
+	}
+	
+	private void initComponents(){
+		
+		// cv label
+		cvLabel = new JLabel("Paste your CV here:");
+		
+		// apply button
+		apply = new JButton("APPLY");
+		apply.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				applyActionPerformed(evt);
+			}
+			});
+
+		
+		// cv scrollpane
+		cvText = new JTextArea("");
+		cvScroll = new JScrollPane (cvText, 
+					 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		setTitle("Apply for a Job");
 		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.CENTER);
-		panel.setLayout(null);
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
 		
-		JLabel lblJobApplication = new JLabel("Job Application");
-		lblJobApplication.setBounds(187, 24, 125, 16);
-		panel.add(lblJobApplication);
+		 layout.setHorizontalGroup(layout.createSequentialGroup()
+		            		.addComponent(cvLabel)
+		            		.addComponent(cvScroll)
+		            		.addComponent(apply)
+		 );
+		 
+		 layout.setVerticalGroup(layout.createSequentialGroup()
+				 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		            		.addComponent(cvLabel)
+		            		.addComponent(cvScroll))
+		         .addComponent(apply)		
+		 );
 		
-		JLabel lblCv = new JLabel("CV:");
-		lblCv.setBounds(41, 57, 61, 16);
-		panel.add(lblCv);
+		pack();
+	}
+	
+	private void refreshData(){
+		// error
+		//errorMessage.setText(error);
 		
-		textField = new JTextField();
-		textField.setBounds(114, 52, 307, 78);
-		panel.add(textField);
-		textField.setColumns(10);
+		//description.setText("");
+		pack();
+	}
+	
+	private void applyActionPerformed(java.awt.event.ActionEvent evt){
 		
-		JButton btnApply = new JButton("Apply");
-		btnApply.setBounds(195, 180, 117, 29);
-		panel.add(btnApply);
+		JobApplicationPersistence srp = new JobApplicationPersistence();
+		
+		refreshData();
 	}
 }
