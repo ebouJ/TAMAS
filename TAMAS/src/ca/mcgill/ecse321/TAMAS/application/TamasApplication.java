@@ -2,6 +2,9 @@ package ca.mcgill.ecse321.TAMAS.application;
 
 import ca.mcgill.ecse321.TAMAS.model.Person;
 import ca.mcgill.ecse321.TAMAS.model.Tamas;
+
+import javax.swing.JFrame;
+
 import ca.mcgill.ecse321.TAMAS.model.Course;
 import ca.mcgill.ecse321.TAMAS.model.Job;
 import ca.mcgill.ecse321.TAMAS.persistence.PersistenceObjectStream;
@@ -15,7 +18,7 @@ import ca.mcgill.ecse321.TAMAS.view.UploadCoursePage;
 import ca.mcgill.ecse321.TAMAS.view.UploadSchedulePage;
 
 public class TamasApplication {
-
+	
 	private static Tamas tamas;
 	private static String filename = "data.tamas";
 
@@ -23,12 +26,14 @@ public class TamasApplication {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// start UI
+		//PostJobPage page = new PostJobPage();
+		
 		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				// to do 
-			}
-		});
+            public void run() {
+            	LoginPage page = new LoginPage();
+               	page.setVisible(true);
+            }
+        });
 
 	}
 
