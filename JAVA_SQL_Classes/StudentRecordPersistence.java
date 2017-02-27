@@ -148,4 +148,21 @@ public class StudentRecordPersistence {
         }
         return status;
     }
+    /* for testing the methods
+    public static void main(String[] args) {
+        /* test methods
+         //registerStudentToDB(12312021, "James", "Java", "UGRAD","Jame.java@java.com", "jamesjava123");
+        s
+        String pwd=getStudentPasswordByID(13124);
+        System.out.println(pwd);
+        
+        String email=getStudentEmailByID(13124);
+        System.out.println(email);
+        
+        String fullname=getStudentNameByID(13124);
+        System.out.println(fullname);
+        
+        String status=getStudentStatusByID(13124);
+        System.out.println(status);
+    }*/
 }
