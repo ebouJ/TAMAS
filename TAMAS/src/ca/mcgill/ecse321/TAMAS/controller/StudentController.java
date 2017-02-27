@@ -8,6 +8,8 @@ import ca.mcgill.ecse321.TAMAS.application.TamasApplication;
 import ca.mcgill.ecse321.TAMAS.model.Course;
 import ca.mcgill.ecse321.TAMAS.model.Instructor;
 import ca.mcgill.ecse321.TAMAS.model.Job;
+import ca.mcgill.ecse321.TAMAS.model.JobApplication;
+import ca.mcgill.ecse321.TAMAS.model.Student;
 
 
 public class StudentController {
@@ -82,8 +84,12 @@ public class StudentController {
 		return details;
 	}
 	
-	public void applyForJob(){
+	public JobApplication applyForJob(Student student, Job job){
+		// This method takes the Student info+CV and the job, then creates a JobApplication 
+		// Student info+CV is the Sudent's attributes and their experience
 		
+		// TODO
+		return null;
 	}
 	
 }
