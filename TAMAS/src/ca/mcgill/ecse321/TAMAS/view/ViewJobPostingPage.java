@@ -15,7 +15,7 @@ import javax.swing.WindowConstants;
 
 //import ca.mcgill.ecse223.tileo.view.AddConnectionView;
 
-public class ViewJobPostingPage extends JFrame {
+public class JobPostDisplayPage extends JFrame {
 	/**
 	 * 
 	 */
@@ -28,7 +28,7 @@ public class ViewJobPostingPage extends JFrame {
 	private JScrollPane JobDescription;
 	private JButton apply;
 	
-	public ViewJobPostingPage() {
+	public JobPostDisplayPage() {
 		initUI(); 
 	}
 	
