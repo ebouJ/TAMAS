@@ -17,7 +17,7 @@ class Person
 
 class Evaluation
 {
- 0..* -- 1 Instructor;
+ * -- 1 Instructor;
  0..1 -- 1 Job;
 }
 
@@ -28,6 +28,7 @@ class Session {
  int sectionNumber;
  String location;
  boolean isLabSession; // else TutorialSession
+ 0..* jobSession -- 0..* Job sessionJob;
 }
 
 class Student
@@ -35,14 +36,14 @@ class Student
  String studentId;
  isA Person;
  boolean isGrad;
- 0..1 jobCandidate -- 0..3 Job offeredJob;
+ 0..* applicant -- 0..3 Job offeredJob;
 }
 
 class Course
 {
  String courseCode;
  int courseCredit;
-  1 <@>- 0..* Session specificSession;
+  1 <@>- * Session specificSession;
 }
 
 class Instructor
