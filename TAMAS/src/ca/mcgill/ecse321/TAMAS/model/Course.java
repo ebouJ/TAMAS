@@ -5,7 +5,7 @@ package ca.mcgill.ecse321.TAMAS.model;
 import java.util.*;
 import java.sql.Time;
 
-// line 39 "../../../../../TAMAS.ump"
+// line 42 "../../../../../TAMAS.ump"
 public class Course
 {
 
@@ -16,9 +16,11 @@ public class Course
   //Course Attributes
   private String courseCode;
   private int courseCredit;
+  private int numberOfHours;
 
   //Course Associations
   private List<Session> specificSession;
+  private Tamas tamas;
   private List<Instructor> instructors;
   private EceAdmin eceAdmin;
   private List<Job> jobs;
@@ -27,11 +29,16 @@ public class Course
   // CONSTRUCTOR
   //------------------------
 
-  public Course(String aCourseCode, int aCourseCredit, EceAdmin aEceAdmin)
+  public Course(String aCourseCode, int aCourseCredit, Tamas aTamas, EceAdmin aEceAdmin)
   {
     courseCode = aCourseCode;
     courseCredit = aCourseCredit;
     specificSession = new ArrayList<Session>();
+    boolean didAddTamas = setTamas(aTamas);
+    if (!didAddTamas)
+    {
+      throw new RuntimeException("Unable to create course due to tamas");
+    }
     instructors = new ArrayList<Instructor>();
     boolean didAddEceAdmin = setEceAdmin(aEceAdmin);
     if (!didAddEceAdmin)
@@ -61,6 +68,14 @@ public class Course
     return wasSet;
   }
 
+  public boolean setNumberOfHours(int aNumberOfHours)
+  {
+    boolean wasSet = false;
+    numberOfHours = aNumberOfHours;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getCourseCode()
   {
     return courseCode;
@@ -69,6 +84,11 @@ public class Course
   public int getCourseCredit()
   {
     return courseCredit;
+  }
+
+  public int getNumberOfHours()
+  {
+    return numberOfHours;
   }
 
   public Session getSpecificSession(int index)
@@ -99,6 +119,11 @@ public class Course
   {
     int index = specificSession.indexOf(aSpecificSession);
     return index;
+  }
+
+  public Tamas getTamas()
+  {
+    return tamas;
   }
 
   public Instructor getInstructor(int index)
@@ -238,6 +263,25 @@ public class Course
     return wasAdded;
   }
 
+  public boolean setTamas(Tamas aTamas)
+  {
+    boolean wasSet = false;
+    if (aTamas == null)
+    {
+      return wasSet;
+    }
+
+    Tamas existingTamas = tamas;
+    tamas = aTamas;
+    if (existingTamas != null && !existingTamas.equals(aTamas))
+    {
+      existingTamas.removeCourse(this);
+    }
+    tamas.addCourse(this);
+    wasSet = true;
+    return wasSet;
+  }
+
   public static int minimumNumberOfInstructors()
   {
     return 0;
@@ -344,9 +388,9 @@ public class Course
     return 0;
   }
 
-  public Job addJob(int aNumberOfHours, int aSalary, boolean aIsTaJob, boolean aIsAssignedToStudent, boolean aIsAllocatedToStudent, String aDescription, String aDeadline, Evaluation aEvaluation, Student aJobCandidate)
+  public Job addJob(int aNumberOfHours, int aSalary, boolean aIsTaJob, boolean aIsAssignedToStudent, boolean aIsAllocatedToStudent, String aDescription, String aDeadline, Tamas aTamas)
   {
-    return new Job(aNumberOfHours, aSalary, aIsTaJob, aIsAssignedToStudent, aIsAllocatedToStudent, aDescription, aDeadline, this, aEvaluation, aJobCandidate);
+    return new Job(aNumberOfHours, aSalary, aIsTaJob, aIsAssignedToStudent, aIsAllocatedToStudent, aDescription, aDeadline, this, aTamas);
   }
 
   public boolean addJob(Job aJob)
@@ -420,6 +464,9 @@ public class Course
       specificSession.remove(aSpecificSession);
     }
     
+    Tamas placeholderTamas = tamas;
+    this.tamas = null;
+    placeholderTamas.removeCourse(this);
     ArrayList<Instructor> copyOfInstructors = new ArrayList<Instructor>(instructors);
     instructors.clear();
     for(Instructor aInstructor : copyOfInstructors)
@@ -442,7 +489,9 @@ public class Course
     String outputString = "";
     return super.toString() + "["+
             "courseCode" + ":" + getCourseCode()+ "," +
-            "courseCredit" + ":" + getCourseCredit()+ "]" + System.getProperties().getProperty("line.separator") +
+            "courseCredit" + ":" + getCourseCredit()+ "," +
+            "numberOfHours" + ":" + getNumberOfHours()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "tamas = "+(getTamas()!=null?Integer.toHexString(System.identityHashCode(getTamas())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "eceAdmin = "+(getEceAdmin()!=null?Integer.toHexString(System.identityHashCode(getEceAdmin())):"null")
      + outputString;
   }

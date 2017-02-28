@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse321.TAMAS.model;
 
-// line 16 "../../../../../TAMAS.ump"
+// line 18 "../../../../../TAMAS.ump"
 public class Evaluation
 {
 
@@ -26,21 +26,11 @@ public class Evaluation
     {
       throw new RuntimeException("Unable to create evaluation due to instructor");
     }
-    if (aJob == null || aJob.getEvaluation() != null)
+    boolean didAddJob = setJob(aJob);
+    if (!didAddJob)
     {
-      throw new RuntimeException("Unable to create Evaluation due to aJob");
+      throw new RuntimeException("Unable to create evaluation due to job");
     }
-    job = aJob;
-  }
-
-  public Evaluation(Instructor aInstructor, int aNumberOfHoursForJob, int aSalaryForJob, boolean aIsTaJobForJob, boolean aIsAssignedToStudentForJob, boolean aIsAllocatedToStudentForJob, String aDescriptionForJob, String aDeadlineForJob, Course aCourseForJob, Student aJobCandidateForJob)
-  {
-    boolean didAddInstructor = setInstructor(aInstructor);
-    if (!didAddInstructor)
-    {
-      throw new RuntimeException("Unable to create evaluation due to instructor");
-    }
-    job = new Job(aNumberOfHoursForJob, aSalaryForJob, aIsTaJobForJob, aIsAssignedToStudentForJob, aIsAllocatedToStudentForJob, aDescriptionForJob, aDeadlineForJob, aCourseForJob, this, aJobCandidateForJob);
   }
 
   //------------------------
@@ -76,6 +66,34 @@ public class Evaluation
     return wasSet;
   }
 
+  public boolean setJob(Job aNewJob)
+  {
+    boolean wasSet = false;
+    if (aNewJob == null)
+    {
+      //Unable to setJob to null, as evaluation must always be associated to a job
+      return wasSet;
+    }
+    
+    Evaluation existingEvaluation = aNewJob.getEvaluation();
+    if (existingEvaluation != null && !equals(existingEvaluation))
+    {
+      //Unable to setJob, the current job already has a evaluation, which would be orphaned if it were re-assigned
+      return wasSet;
+    }
+    
+    Job anOldJob = job;
+    job = aNewJob;
+    job.setEvaluation(this);
+
+    if (anOldJob != null)
+    {
+      anOldJob.setEvaluation(null);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete()
   {
     Instructor placeholderInstructor = instructor;
@@ -85,7 +103,7 @@ public class Evaluation
     job = null;
     if (existingJob != null)
     {
-      existingJob.delete();
+      existingJob.setEvaluation(null);
     }
   }
 

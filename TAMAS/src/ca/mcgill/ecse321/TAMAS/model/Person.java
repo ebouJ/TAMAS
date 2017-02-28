@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse321.TAMAS.model;
 
-// line 8 "../../../../../TAMAS.ump"
+// line 10 "../../../../../TAMAS.ump"
 public class Person
 {
 
@@ -16,15 +16,23 @@ public class Person
   private String username;
   private String password;
 
+  //Person Associations
+  private Tamas tamas;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName, String aUsername, String aPassword)
+  public Person(String aName, String aUsername, String aPassword, Tamas aTamas)
   {
     name = aName;
     username = aUsername;
     password = aPassword;
+    boolean didAddTamas = setTamas(aTamas);
+    if (!didAddTamas)
+    {
+      throw new RuntimeException("Unable to create person due to tamas");
+    }
   }
 
   //------------------------
@@ -70,8 +78,36 @@ public class Person
     return password;
   }
 
+  public Tamas getTamas()
+  {
+    return tamas;
+  }
+
+  public boolean setTamas(Tamas aTamas)
+  {
+    boolean wasSet = false;
+    if (aTamas == null)
+    {
+      return wasSet;
+    }
+
+    Tamas existingTamas = tamas;
+    tamas = aTamas;
+    if (existingTamas != null && !existingTamas.equals(aTamas))
+    {
+      existingTamas.removePerson(this);
+    }
+    tamas.addPerson(this);
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete()
-  {}
+  {
+    Tamas placeholderTamas = tamas;
+    this.tamas = null;
+    placeholderTamas.removePerson(this);
+  }
 
 
   public String toString()
@@ -80,7 +116,8 @@ public class Person
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "username" + ":" + getUsername()+ "," +
-            "password" + ":" + getPassword()+ "]"
+            "password" + ":" + getPassword()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "tamas = "+(getTamas()!=null?Integer.toHexString(System.identityHashCode(getTamas())):"null")
      + outputString;
   }
 }

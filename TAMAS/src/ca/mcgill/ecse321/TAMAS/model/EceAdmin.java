@@ -4,7 +4,7 @@
 package ca.mcgill.ecse321.TAMAS.model;
 import java.util.*;
 
-// line 52 "../../../../../TAMAS.ump"
+// line 56 "../../../../../TAMAS.ump"
 public class EceAdmin extends Person
 {
 
@@ -19,9 +19,9 @@ public class EceAdmin extends Person
   // CONSTRUCTOR
   //------------------------
 
-  public EceAdmin(String aName, String aUsername, String aPassword)
+  public EceAdmin(String aName, String aUsername, String aPassword, Tamas aTamas)
   {
-    super(aName, aUsername, aPassword);
+    super(aName, aUsername, aPassword, aTamas);
     courseList = new ArrayList<Course>();
   }
 
@@ -64,9 +64,9 @@ public class EceAdmin extends Person
     return 0;
   }
 
-  public Course addCourseList(String aCourseCode, int aCourseCredit)
+  public Course addCourseList(String aCourseCode, int aCourseCredit, Tamas aTamas)
   {
-    return new Course(aCourseCode, aCourseCredit, this);
+    return new Course(aCourseCode, aCourseCredit, aTamas, this);
   }
 
   public boolean addCourseList(Course aCourseList)

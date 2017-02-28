@@ -4,7 +4,7 @@
 package ca.mcgill.ecse321.TAMAS.model;
 import java.util.*;
 
-// line 58 "../../../../../TAMAS.ump"
+// line 62 "../../../../../TAMAS.ump"
 public class Job
 {
 
@@ -38,15 +38,17 @@ public class Job
 
   //Job Associations
   private Course course;
+  private Tamas tamas;
   private Evaluation evaluation;
-  private Student jobCandidate;
+  private List<Session> jobSession;
+  private List<Student> applicant;
   private List<JobApplication> jobApplications;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Job(int aNumberOfHours, int aSalary, boolean aIsTaJob, boolean aIsAssignedToStudent, boolean aIsAllocatedToStudent, String aDescription, String aDeadline, Course aCourse, Evaluation aEvaluation, Student aJobCandidate)
+  public Job(int aNumberOfHours, int aSalary, boolean aIsTaJob, boolean aIsAssignedToStudent, boolean aIsAllocatedToStudent, String aDescription, String aDeadline, Course aCourse, Tamas aTamas)
   {
     numberOfHours = aNumberOfHours;
     salary = aSalary;
@@ -61,42 +63,15 @@ public class Job
     {
       throw new RuntimeException("Unable to create job due to course");
     }
-    if (aEvaluation == null || aEvaluation.getJob() != null)
+    boolean didAddTamas = setTamas(aTamas);
+    if (!didAddTamas)
     {
-      throw new RuntimeException("Unable to create Job due to aEvaluation");
+      throw new RuntimeException("Unable to create job due to tamas");
     }
-    evaluation = aEvaluation;
-    boolean didAddJobCandidate = setJobCandidate(aJobCandidate);
-    if (!didAddJobCandidate)
-    {
-      throw new RuntimeException("Unable to create offeredJob due to jobCandidate");
-    }
+    jobSession = new ArrayList<Session>();
+    applicant = new ArrayList<Student>();
     jobApplications = new ArrayList<JobApplication>();
     setJobState(JobState.IsPosted);
-  }
-
-  public Job(int aNumberOfHours, int aSalary, boolean aIsTaJob, boolean aIsAssignedToStudent, boolean aIsAllocatedToStudent, String aDescription, String aDeadline, Course aCourse, Instructor aInstructorForEvaluation, Student aJobCandidate)
-  {
-    numberOfHours = aNumberOfHours;
-    salary = aSalary;
-    isTaJob = aIsTaJob;
-    isAssignedToStudent = aIsAssignedToStudent;
-    isAllocatedToStudent = aIsAllocatedToStudent;
-    description = aDescription;
-    deadline = aDeadline;
-    jobId = nextJobId++;
-    boolean didAddCourse = setCourse(aCourse);
-    if (!didAddCourse)
-    {
-      throw new RuntimeException("Unable to create job due to course");
-    }
-    evaluation = new Evaluation(aInstructorForEvaluation, this);
-    boolean didAddJobCandidate = setJobCandidate(aJobCandidate);
-    if (!didAddJobCandidate)
-    {
-      throw new RuntimeException("Unable to create offeredJob due to jobCandidate");
-    }
-    jobApplications = new ArrayList<JobApplication>();
   }
 
   //------------------------
@@ -227,14 +202,80 @@ public class Job
     return course;
   }
 
+  public Tamas getTamas()
+  {
+    return tamas;
+  }
+
   public Evaluation getEvaluation()
   {
     return evaluation;
   }
 
-  public Student getJobCandidate()
+  public boolean hasEvaluation()
   {
-    return jobCandidate;
+    boolean has = evaluation != null;
+    return has;
+  }
+
+  public Session getJobSession(int index)
+  {
+    Session aJobSession = jobSession.get(index);
+    return aJobSession;
+  }
+
+  public List<Session> getJobSession()
+  {
+    List<Session> newJobSession = Collections.unmodifiableList(jobSession);
+    return newJobSession;
+  }
+
+  public int numberOfJobSession()
+  {
+    int number = jobSession.size();
+    return number;
+  }
+
+  public boolean hasJobSession()
+  {
+    boolean has = jobSession.size() > 0;
+    return has;
+  }
+
+  public int indexOfJobSession(Session aJobSession)
+  {
+    int index = jobSession.indexOf(aJobSession);
+    return index;
+  }
+
+  public Student getApplicant(int index)
+  {
+    Student aApplicant = applicant.get(index);
+    return aApplicant;
+  }
+
+  public List<Student> getApplicant()
+  {
+    List<Student> newApplicant = Collections.unmodifiableList(applicant);
+    return newApplicant;
+  }
+
+  public int numberOfApplicant()
+  {
+    int number = applicant.size();
+    return number;
+  }
+
+  public boolean hasApplicant()
+  {
+    boolean has = applicant.size() > 0;
+    return has;
+  }
+
+  public int indexOfApplicant(Student aApplicant)
+  {
+    int index = applicant.indexOf(aApplicant);
+    return index;
   }
 
   public JobApplication getJobApplication(int index)
@@ -286,35 +327,214 @@ public class Job
     return wasSet;
   }
 
-  public boolean setJobCandidate(Student aJobCandidate)
+  public boolean setTamas(Tamas aTamas)
   {
     boolean wasSet = false;
-    //Must provide jobCandidate to offeredJob
-    if (aJobCandidate == null)
+    if (aTamas == null)
     {
       return wasSet;
     }
 
-    //jobCandidate already at maximum (3)
-    if (aJobCandidate.numberOfOfferedJob() >= Student.maximumNumberOfOfferedJob())
+    Tamas existingTamas = tamas;
+    tamas = aTamas;
+    if (existingTamas != null && !existingTamas.equals(aTamas))
     {
-      return wasSet;
+      existingTamas.removeJob(this);
     }
-    
-    Student existingJobCandidate = jobCandidate;
-    jobCandidate = aJobCandidate;
-    if (existingJobCandidate != null && !existingJobCandidate.equals(aJobCandidate))
-    {
-      boolean didRemove = existingJobCandidate.removeOfferedJob(this);
-      if (!didRemove)
-      {
-        jobCandidate = existingJobCandidate;
-        return wasSet;
-      }
-    }
-    jobCandidate.addOfferedJob(this);
+    tamas.addJob(this);
     wasSet = true;
     return wasSet;
+  }
+
+  public boolean setEvaluation(Evaluation aNewEvaluation)
+  {
+    boolean wasSet = false;
+    if (evaluation != null && !evaluation.equals(aNewEvaluation) && equals(evaluation.getJob()))
+    {
+      //Unable to setEvaluation, as existing evaluation would become an orphan
+      return wasSet;
+    }
+
+    evaluation = aNewEvaluation;
+    Job anOldJob = aNewEvaluation != null ? aNewEvaluation.getJob() : null;
+
+    if (!this.equals(anOldJob))
+    {
+      if (anOldJob != null)
+      {
+        anOldJob.evaluation = null;
+      }
+      if (evaluation != null)
+      {
+        evaluation.setJob(this);
+      }
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public static int minimumNumberOfJobSession()
+  {
+    return 0;
+  }
+
+  public boolean addJobSession(Session aJobSession)
+  {
+    boolean wasAdded = false;
+    if (jobSession.contains(aJobSession)) { return false; }
+    jobSession.add(aJobSession);
+    if (aJobSession.indexOfSessionJob(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aJobSession.addSessionJob(this);
+      if (!wasAdded)
+      {
+        jobSession.remove(aJobSession);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeJobSession(Session aJobSession)
+  {
+    boolean wasRemoved = false;
+    if (!jobSession.contains(aJobSession))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = jobSession.indexOf(aJobSession);
+    jobSession.remove(oldIndex);
+    if (aJobSession.indexOfSessionJob(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aJobSession.removeSessionJob(this);
+      if (!wasRemoved)
+      {
+        jobSession.add(oldIndex,aJobSession);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addJobSessionAt(Session aJobSession, int index)
+  {  
+    boolean wasAdded = false;
+    if(addJobSession(aJobSession))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfJobSession()) { index = numberOfJobSession() - 1; }
+      jobSession.remove(aJobSession);
+      jobSession.add(index, aJobSession);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveJobSessionAt(Session aJobSession, int index)
+  {
+    boolean wasAdded = false;
+    if(jobSession.contains(aJobSession))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfJobSession()) { index = numberOfJobSession() - 1; }
+      jobSession.remove(aJobSession);
+      jobSession.add(index, aJobSession);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addJobSessionAt(aJobSession, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfApplicant()
+  {
+    return 0;
+  }
+
+  public boolean addApplicant(Student aApplicant)
+  {
+    boolean wasAdded = false;
+    if (applicant.contains(aApplicant)) { return false; }
+    applicant.add(aApplicant);
+    if (aApplicant.indexOfOfferedJob(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aApplicant.addOfferedJob(this);
+      if (!wasAdded)
+      {
+        applicant.remove(aApplicant);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeApplicant(Student aApplicant)
+  {
+    boolean wasRemoved = false;
+    if (!applicant.contains(aApplicant))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = applicant.indexOf(aApplicant);
+    applicant.remove(oldIndex);
+    if (aApplicant.indexOfOfferedJob(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aApplicant.removeOfferedJob(this);
+      if (!wasRemoved)
+      {
+        applicant.add(oldIndex,aApplicant);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addApplicantAt(Student aApplicant, int index)
+  {  
+    boolean wasAdded = false;
+    if(addApplicant(aApplicant))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfApplicant()) { index = numberOfApplicant() - 1; }
+      applicant.remove(aApplicant);
+      applicant.add(index, aApplicant);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveApplicantAt(Student aApplicant, int index)
+  {
+    boolean wasAdded = false;
+    if(applicant.contains(aApplicant))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfApplicant()) { index = numberOfApplicant() - 1; }
+      applicant.remove(aApplicant);
+      applicant.add(index, aApplicant);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addApplicantAt(aApplicant, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfJobApplications()
@@ -394,15 +614,27 @@ public class Job
     Course placeholderCourse = course;
     this.course = null;
     placeholderCourse.removeJob(this);
+    Tamas placeholderTamas = tamas;
+    this.tamas = null;
+    placeholderTamas.removeJob(this);
     Evaluation existingEvaluation = evaluation;
     evaluation = null;
     if (existingEvaluation != null)
     {
       existingEvaluation.delete();
     }
-    Student placeholderJobCandidate = jobCandidate;
-    this.jobCandidate = null;
-    placeholderJobCandidate.removeOfferedJob(this);
+    ArrayList<Session> copyOfJobSession = new ArrayList<Session>(jobSession);
+    jobSession.clear();
+    for(Session aJobSession : copyOfJobSession)
+    {
+      aJobSession.removeSessionJob(this);
+    }
+    ArrayList<Student> copyOfApplicant = new ArrayList<Student>(applicant);
+    applicant.clear();
+    for(Student aApplicant : copyOfApplicant)
+    {
+      aApplicant.removeOfferedJob(this);
+    }
     for(int i=jobApplications.size(); i > 0; i--)
     {
       JobApplication aJobApplication = jobApplications.get(i - 1);
@@ -424,8 +656,8 @@ public class Job
             "description" + ":" + getDescription()+ "," +
             "deadline" + ":" + getDeadline()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "course = "+(getCourse()!=null?Integer.toHexString(System.identityHashCode(getCourse())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "evaluation = "+(getEvaluation()!=null?Integer.toHexString(System.identityHashCode(getEvaluation())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "jobCandidate = "+(getJobCandidate()!=null?Integer.toHexString(System.identityHashCode(getJobCandidate())):"null")
+            "  " + "tamas = "+(getTamas()!=null?Integer.toHexString(System.identityHashCode(getTamas())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "evaluation = "+(getEvaluation()!=null?Integer.toHexString(System.identityHashCode(getEvaluation())):"null")
      + outputString;
   }
 }

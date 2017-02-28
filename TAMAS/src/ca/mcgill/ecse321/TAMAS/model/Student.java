@@ -4,7 +4,7 @@
 package ca.mcgill.ecse321.TAMAS.model;
 import java.util.*;
 
-// line 31 "../../../../../TAMAS.ump"
+// line 34 "../../../../../TAMAS.ump"
 public class Student extends Person
 {
 
@@ -24,9 +24,9 @@ public class Student extends Person
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aName, String aUsername, String aPassword, String aStudentId, boolean aIsGrad)
+  public Student(String aName, String aUsername, String aPassword, Tamas aTamas, String aStudentId, boolean aIsGrad)
   {
-    super(aName, aUsername, aPassword);
+    super(aName, aUsername, aPassword, aTamas);
     studentId = aStudentId;
     isGrad = aIsGrad;
     offeredJob = new ArrayList<Job>();
@@ -133,18 +133,6 @@ public class Student extends Person
     return 3;
   }
 
-  public Job addOfferedJob(int aNumberOfHours, int aSalary, boolean aIsTaJob, boolean aIsAssignedToStudent, boolean aIsAllocatedToStudent, String aDescription, String aDeadline, Course aCourse, Evaluation aEvaluation)
-  {
-    if (numberOfOfferedJob() >= maximumNumberOfOfferedJob())
-    {
-      return null;
-    }
-    else
-    {
-      return new Job(aNumberOfHours, aSalary, aIsTaJob, aIsAssignedToStudent, aIsAllocatedToStudent, aDescription, aDeadline, aCourse, aEvaluation, this);
-    }
-  }
-
   public boolean addOfferedJob(Job aOfferedJob)
   {
     boolean wasAdded = false;
@@ -154,30 +142,86 @@ public class Student extends Person
       return wasAdded;
     }
 
-    Student existingJobCandidate = aOfferedJob.getJobCandidate();
-    boolean isNewJobCandidate = existingJobCandidate != null && !this.equals(existingJobCandidate);
-    if (isNewJobCandidate)
+    offeredJob.add(aOfferedJob);
+    if (aOfferedJob.indexOfApplicant(this) != -1)
     {
-      aOfferedJob.setJobCandidate(this);
+      wasAdded = true;
     }
     else
     {
-      offeredJob.add(aOfferedJob);
+      wasAdded = aOfferedJob.addApplicant(this);
+      if (!wasAdded)
+      {
+        offeredJob.remove(aOfferedJob);
+      }
     }
-    wasAdded = true;
     return wasAdded;
   }
 
   public boolean removeOfferedJob(Job aOfferedJob)
   {
     boolean wasRemoved = false;
-    //Unable to remove aOfferedJob, as it must always have a jobCandidate
-    if (!this.equals(aOfferedJob.getJobCandidate()))
+    if (!offeredJob.contains(aOfferedJob))
     {
-      offeredJob.remove(aOfferedJob);
+      return wasRemoved;
+    }
+
+    int oldIndex = offeredJob.indexOf(aOfferedJob);
+    offeredJob.remove(oldIndex);
+    if (aOfferedJob.indexOfApplicant(this) == -1)
+    {
       wasRemoved = true;
     }
+    else
+    {
+      wasRemoved = aOfferedJob.removeApplicant(this);
+      if (!wasRemoved)
+      {
+        offeredJob.add(oldIndex,aOfferedJob);
+      }
+    }
     return wasRemoved;
+  }
+
+  public boolean setOfferedJob(Job... newOfferedJob)
+  {
+    boolean wasSet = false;
+    ArrayList<Job> verifiedOfferedJob = new ArrayList<Job>();
+    for (Job aOfferedJob : newOfferedJob)
+    {
+      if (verifiedOfferedJob.contains(aOfferedJob))
+      {
+        continue;
+      }
+      verifiedOfferedJob.add(aOfferedJob);
+    }
+
+    if (verifiedOfferedJob.size() != newOfferedJob.length || verifiedOfferedJob.size() > maximumNumberOfOfferedJob())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Job> oldOfferedJob = new ArrayList<Job>(offeredJob);
+    offeredJob.clear();
+    for (Job aNewOfferedJob : verifiedOfferedJob)
+    {
+      offeredJob.add(aNewOfferedJob);
+      if (oldOfferedJob.contains(aNewOfferedJob))
+      {
+        oldOfferedJob.remove(aNewOfferedJob);
+      }
+      else
+      {
+        aNewOfferedJob.addApplicant(this);
+      }
+    }
+
+    for (Job anOldOfferedJob : oldOfferedJob)
+    {
+      anOldOfferedJob.removeApplicant(this);
+    }
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean addOfferedJobAt(Job aOfferedJob, int index)
@@ -303,10 +347,11 @@ public class Student extends Person
 
   public void delete()
   {
-    for(int i=offeredJob.size(); i > 0; i--)
+    ArrayList<Job> copyOfOfferedJob = new ArrayList<Job>(offeredJob);
+    offeredJob.clear();
+    for(Job aOfferedJob : copyOfOfferedJob)
     {
-      Job aOfferedJob = offeredJob.get(i - 1);
-      aOfferedJob.delete();
+      aOfferedJob.removeApplicant(this);
     }
     for(int i=jobApplications.size(); i > 0; i--)
     {
