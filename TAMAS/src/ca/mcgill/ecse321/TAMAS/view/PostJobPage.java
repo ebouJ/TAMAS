@@ -344,21 +344,12 @@ public class PostJobPage extends javax.swing.JFrame {
 		int fst = (int)startTimeFri.getSelectedItem();
 		int fet = (int)endTimeFri.getSelectedItem();
 		
-		JobPostingPersistence jpp = new JobPostingPersistence();
-		jpp.submitJobPostingtoDB(instructor_name, course, job_type, hour,
-			description, daysofweek, mst, met, tst, tet, wst, wet, thst,
-			thet, fst, fet);
+		int times[] = {mst,met, tst,tet, wst,wet, thst,thet, fst,fet};
 		
-		/*// clear error message
-		error = null;
-		
-		// call the controller
-		InstructorController sc = new InstructorController();
-		try {
-			sc.postJob(instructorName.getText(), (String)courseList.getSelectedItem(), (String)jobType.getSelectedItem(), (int)hoursSpinner.getValue(), (String)descriptionText.getText());
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}*/
+		// Send to controller, then call submitJobPostingtoDB from there
+		InstructorController ic = new InstructorController();
+		ic.postJob(instructor_name, course, job_type, hour,
+			description, daysofweek, times);
 		
 		// update visuals
 		refreshData();
