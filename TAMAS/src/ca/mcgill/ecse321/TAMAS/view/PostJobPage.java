@@ -159,9 +159,9 @@ public class PostJobPage extends javax.swing.JFrame {
 		//submit button
 		submit = new JButton("SUBMIT");
 		submit.addActionListener(new java.awt.event.ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent evt) {
-			submitActionPerformed(evt);
-		}
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				submitActionPerformed(evt);
+			}
 		});
 
 		// message showing success
@@ -328,9 +328,9 @@ public class PostJobPage extends javax.swing.JFrame {
 		if(wednesday.isSelected())
 			daysofweek+="Wednesday ";
 		if(thursday.isSelected())
-			daysofweek+="Thursday";
+			daysofweek+="Thursday ";
 		if(friday.isSelected())
-			daysofweek+="Friday";
+			daysofweek+="Friday ";
 		
 		//start times and end times
 		int mst = (int)startTimeMon.getSelectedItem();
