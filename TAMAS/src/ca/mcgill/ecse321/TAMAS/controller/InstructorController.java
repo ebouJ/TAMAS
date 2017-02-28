@@ -45,5 +45,13 @@ public class InstructorController {
 			throw new InvalidInputException(e.getMessage());
 		}
 	}
+	
+	public void postJob(String instructor_name, String course, String job_type, int hour,
+			String description, String daysofweek, int[] times){
+		
+		JobPostingPersistence jpp = new JobPostingPersistence();
+		jpp.submitJobPostingtoDB(instructor_name, course, job_type, hour,
+			description, daysofweek, times);
+	}
 
 }
