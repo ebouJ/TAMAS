@@ -25,8 +25,7 @@ public class JobPostingPersistence {
 	static int[] fri_et = new int[20];
 
 	public static void submitJobPostingtoDB(String instructor_name, String course, String job_type, int hour,
-			String description, String daysofweek, int mst, int met, int tst, int tet, int wst, int wet, int thst,
-			int thet, int fst, int fet) {
+			String description, String daysofweek, int[] times) {
 		try {
 			Connection connection = DriverManager.getConnection(dbURL, user, pass);
 			String preparedsql = " INSERT INTO JobPostData " + " (INSTRUCTOR_NAME,COURSE,JOB_TYPE,HOUR,DESCRIPTION,"
@@ -40,16 +39,16 @@ public class JobPostingPersistence {
 			myStatement.setInt(4, hour);
 			myStatement.setString(5, description);
 			myStatement.setString(6, daysofweek);
-			myStatement.setInt(7, mst);
-			myStatement.setInt(8, met);
-			myStatement.setInt(9, tst);
-			myStatement.setInt(10, tet);
-			myStatement.setInt(11, wst);
-			myStatement.setInt(12, wet);
-			myStatement.setInt(13, thst);
-			myStatement.setInt(14, thet);
-			myStatement.setInt(15, fst);
-			myStatement.setInt(16, fet);
+			myStatement.setInt(7, times[0]);
+			myStatement.setInt(8, times[1]);
+			myStatement.setInt(9, times[2]);
+			myStatement.setInt(10, times[3]);
+			myStatement.setInt(11, times[4]);
+			myStatement.setInt(12, times[5]);
+			myStatement.setInt(13, times[6]);
+			myStatement.setInt(14, times[7]);
+			myStatement.setInt(15, times[8]);
+			myStatement.setInt(16, times[9]);
 			myStatement.executeUpdate();
 			System.out.println("Update success! ");
 		} catch (SQLException e) {
